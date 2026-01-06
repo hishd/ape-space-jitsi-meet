@@ -3,6 +3,6 @@ WORKDIR /src
 COPY . .
 RUN npm install && make
 
-# FROM jitsi/web:stable
-# WORKDIR /usr/share/jitsi-meet
-# COPY --from=build /src/ ./
+FROM jitsi/web:stable
+WORKDIR /usr/share/jitsi-meet
+COPY --from=build /src/ ./

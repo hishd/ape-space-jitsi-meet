@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { connect } from 'react-redux';
 import { makeStyles } from 'tss-react/mui';
@@ -86,26 +86,6 @@ const E2EESection = ({
 }: IProps) => {
     const { classes } = useStyles();
     const { t } = useTranslation();
-    const [ toggled, setToggled ] = useState(_toggled ?? false);
-
-    useEffect(() => {
-        setToggled(_toggled);
-    }, [ _toggled ]);
-
-    /**
-     * Callback to be invoked when the user toggles E2EE on or off.
-     *
-     * @private
-     * @returns {void}
-     */
-    const _onToggle = useCallback(() => {
-        const newValue = !toggled;
-
-        setToggled(newValue);
-
-        sendAnalytics(createE2EEEvent(`enabled.${String(newValue)}`));
-        dispatch(toggleE2EE(newValue));
-    }, [ toggled ]);
 
     const description = _e2eeLabels?.description || t(_descriptionResource ?? '');
     const label = _e2eeLabels?.label || t('dialog.e2eeLabel');
@@ -128,10 +108,13 @@ const E2EESection = ({
                     {label}
                 </label>
                 <Switch
-                    checked = { toggled }
+                    checked = { _toggled }
                     disabled = { !_enabled }
                     id = 'e2ee-section-switch'
-                    onChange = { _onToggle } />
+                    onChange = { (checked) => {
+                        sendAnalytics(createE2EEEvent(`enabled.${String(checked)}`));
+                        dispatch(toggleE2EE(checked || false));
+                    } } />
             </div>
         </div>
     );

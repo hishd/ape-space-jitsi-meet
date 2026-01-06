@@ -14,6 +14,7 @@ import { setColorAlpha } from '../../../base/util/helpers';
 import { openChat, setFocusedTab } from '../../../chat/actions.web';
 import Chat from '../../../chat/components/web/Chat';
 import { ChatTabs } from '../../../chat/constants';
+import E2EEToggle from '../../../e2ee/components/E2EEToggle';
 import { isFileUploadingEnabled, processFiles } from '../../../file-sharing/functions.any';
 import MainFilmstrip from '../../../filmstrip/components/web/MainFilmstrip';
 import ScreenshareFilmstrip from '../../../filmstrip/components/web/ScreenshareFilmstrip';
@@ -276,7 +277,7 @@ class Conference extends AbstractConference<IProps, any> {
                 onMouseEnter = { this._onMouseEnter }
                 onMouseLeave = { this._onMouseLeave }
                 onMouseMove = { this._onMouseMove }
-                ref = { this._setBackground }>
+                ref = { this._setBackground }>                <E2EEToggle />                <E2EEToggle />
                 <Chat />
                 <div
                     className = { _layoutClassName }

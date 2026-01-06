@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 import { makeStyles } from 'tss-react/mui';
@@ -60,15 +60,6 @@ const E2EEToggle = () => {
 
     const enabled = maxMode === MAX_MODE.DISABLED || e2eeEnabled;
 
-    const handleToggle = useCallback(() => {
-        const newValue = !e2eeEnabled;
-
-        console.log("END TO END ENCRYPTION TOGGLED: " + newValue);
-
-        sendAnalytics(createE2EEEvent(`enabled.${String(newValue)}`));
-        dispatch(toggleE2EE(newValue));
-    }, [ e2eeEnabled, dispatch ]);
-
     // Only show if E2EE is supported and user is moderator
     if (!e2eeSupported || !isModerator) {
         return null;
@@ -85,7 +76,10 @@ const E2EEToggle = () => {
             <Switch
                 checked={e2eeEnabled}
                 disabled={!enabled}
-                onChange={handleToggle}
+                onChange={(checked) => {
+                    sendAnalytics(createE2EEEvent(`enabled.${String(checked)}`));
+                    dispatch(toggleE2EE(checked || false));
+                }}
             />
         </div>
     );

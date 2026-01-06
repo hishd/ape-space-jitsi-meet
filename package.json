@@ -197,7 +197,9 @@
     "webpack": "5.95.0",
     "webpack-bundle-analyzer": "4.4.2",
     "webpack-cli": "5.1.4",
-    "webpack-dev-server": "5.1.0"
+    "webpack-dev-server": "5.1.0",
+    "dotenv": "^17.2.3",
+    "dotenv-cli": "^11.0.0"
   },
   "engines": {
     "node": ">=22.0.0",
@@ -215,7 +217,7 @@
     "lint-fix": "eslint --ext .js,.ts,.tsx --max-warnings 0 --fix .",
     "postinstall": "patch-package --error-on-fail && jetify",
     "validate": "npm ls",
-    "start": "make dev",
+    "start": "dotenv -e .env -- make dev",
     "test": "DOTENV_CONFIG_PATH=tests/.env wdio run tests/wdio.conf.ts",
     "test-single": "DOTENV_CONFIG_PATH=tests/.env wdio run tests/wdio.conf.ts --spec",
     "test-ff-single": "DOTENV_CONFIG_PATH=tests/.env wdio run tests/wdio.firefox.conf.ts --spec",

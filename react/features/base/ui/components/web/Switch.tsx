@@ -1,11 +1,10 @@
-import React, { useCallback } from 'react';
-import { makeStyles } from 'tss-react/mui';
+import React, { useCallback } from "react";
+import { makeStyles } from "tss-react/mui";
 
-import { isMobileBrowser } from '../../../environment/utils';
-import { ISwitchProps } from '../types';
+import { isMobileBrowser } from "../../../environment/utils";
+import { ISwitchProps } from "../types";
 
 interface IProps extends ISwitchProps {
-
     className?: string;
 
     /**
@@ -14,101 +13,67 @@ interface IProps extends ISwitchProps {
     id?: string;
 }
 
-const useStyles = makeStyles()(theme => {
-    return {
-        container: {
-            position: 'relative',
-            backgroundColor: theme.palette.ui05,
-            borderRadius: '12px',
-            width: '40px',
-            height: '24px',
-            border: 0,
-            outline: 0,
-            cursor: 'pointer',
-            transition: '.3s',
-            display: 'inline-block',
+const BRAND_COLOR = "#FFA800";
+const OFF_BG = "#D9D9D9";
 
-            '&.disabled': {
-                backgroundColor: theme.palette.ui05,
-                cursor: 'default',
+const useStyles = makeStyles()((theme) => ({
+    container: {
+        position: "relative",
+        width: "56px",
+        height: "28px",
+        borderRadius: "999px",
+        backgroundColor: OFF_BG,
+        cursor: "pointer",
+        transition: "background-color 0.25s ease",
+        display: "inline-flex",
+        alignItems: "center",
+        padding: "3px",
 
-                '& .toggle': {
-                    backgroundColor: theme.palette.ui03
-                }
-            },
-
-            '&.is-mobile': {
-                height: '32px',
-                width: '50px',
-                borderRadius: '32px'
-            }
+        "&.disabled": {
+            opacity: 0.5,
+            cursor: "not-allowed",
         },
 
-        containerOn: {
-            backgroundColor: theme.palette.action01
+        "&.is-mobile": {
+            width: "64px",
+            height: "32px",
         },
+    },
 
-        toggle: {
-            width: '16px',
-            height: '16px',
-            position: 'absolute',
-            zIndex: 5,
-            top: '4px',
-            left: '4px',
-            backgroundColor: theme.palette.ui10,
-            borderRadius: '100%',
-            transition: '.3s',
+    containerOn: {
+        backgroundColor: BRAND_COLOR,
+    },
 
-            '&.is-mobile': {
-                width: '24px',
-                height: '24px'
-            }
+    toggle: {
+        width: "22px",
+        height: "22px",
+        backgroundColor: "#FFFFFF",
+        borderRadius: "50%",
+        transition: "transform 0.25s ease",
+        transform: "translateX(0)",
+        boxShadow: "0 2px 4px rgba(0,0,0,0.25)",
+
+        "&.is-mobile": {
+            width: "26px",
+            height: "26px",
         },
+    },
 
-        toggleOn: {
-            left: '20px',
+    toggleOn: {
+        transform: "translateX(28px)",
 
-            '&.is-mobile': {
-                left: '22px'
-            }
+        "&.is-mobile": {
+            transform: "translateX(32px)",
         },
+    },
 
-        checkbox: {
-            position: 'absolute',
-            zIndex: 10,
-            cursor: 'pointer',
-            left: 0,
-            right: 0,
-            top: 0,
-            bottom: 0,
-            width: '100%',
-            height: '100%',
-            opacity: 0,
-
-            '&.focus-visible + .toggle-checkbox-ring': {
-                outline: 0,
-                boxShadow: `0px 0px 0px 2px ${theme.palette.focus01}`
-            }
-        },
-
-        checkboxRing: {
-            position: 'absolute',
-            pointerEvents: 'none',
-            zIndex: 6,
-            left: 0,
-            right: 0,
-            top: 0,
-            bottom: 0,
-            width: '100%',
-            height: '100%',
-            borderRadius: '12px',
-
-            '&.is-mobile': {
-                borderRadius: '32px'
-            }
-        }
-    };
-});
+    checkbox: {
+        position: "absolute",
+        inset: 0,
+        opacity: 0,
+        cursor: "pointer",
+    },
+}));
 
 const Switch = ({ className, id, checked, disabled, onChange }: IProps) => {
     const { classes: styles, cx } = useStyles();
@@ -120,17 +85,23 @@ const Switch = ({ className, id, checked, disabled, onChange }: IProps) => {
 
     return (
         <span
-            className = { cx('toggle-container', styles.container, checked && styles.containerOn,
-                isMobile && 'is-mobile', disabled && 'disabled', className) }>
+            className={cx(
+                styles.container,
+                checked && styles.containerOn,
+                isMobile && "is-mobile",
+                disabled && "disabled",
+                className
+            )}
+        >
             <input
-                type = 'checkbox'
-                { ...(id ? { id } : {}) }
-                checked = { checked }
-                className = { styles.checkbox }
-                disabled = { disabled }
-                onChange = { change } />
-            <div className = { cx('toggle-checkbox-ring', styles.checkboxRing, isMobile && 'is-mobile') } />
-            <div className = { cx('toggle', styles.toggle, checked && styles.toggleOn, isMobile && 'is-mobile') } />
+                type="checkbox"
+                {...(id ? { id } : {})}
+                checked={checked}
+                disabled={disabled}
+                className={styles.checkbox}
+                onChange={change}
+            />
+            <span className={cx(styles.toggle, checked && styles.toggleOn, isMobile && "is-mobile")} />
         </span>
     );
 };

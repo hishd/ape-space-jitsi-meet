@@ -65,7 +65,18 @@ export function getInviteURL(stateOrGetState: IStateful): string {
         return `${inviteDomain}/${meetingId}`;
     }
 
-    return urlWithoutParams.href;
+    // return urlWithoutParams.href;
+
+    let meetingInviteUrlPrefix
+        = state['features/base/config'].meetingInviteUrlPrefix;
+
+    if (meetingInviteUrlPrefix) {
+        const meetingId
+            = state['features/base/config'].brandingRoomAlias || urlWithoutParams.pathname.replace(/\//, '');
+        return `${meetingInviteUrlPrefix}/${meetingId}`;
+    } else {
+        return urlWithoutParams.href;
+    }
 }
 
 /**

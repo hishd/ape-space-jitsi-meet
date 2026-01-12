@@ -680,4 +680,5 @@ export interface IConfig {
         disabled?: boolean;
     };
     whiteboard?: IWhiteboardConfig;
+    meetingInviteUrlPrefix?: string;
 }

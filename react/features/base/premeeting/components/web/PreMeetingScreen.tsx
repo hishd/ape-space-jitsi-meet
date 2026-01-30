@@ -235,25 +235,9 @@ const PreMeetingScreen = ({
                             <h1 className = { classes.title }>
                                 {title}
                             </h1>
-                            {_roomName && (
-                                <span className = { classes.roomNameContainer }>
-                                    {isOverflowing ? (
-                                        <Tooltip content = { _roomName }>
-                                            <span
-                                                className = { classes.roomName }
-                                                ref = { roomNameRef }>
-                                                {_roomName}
-                                            </span>
-                                        </Tooltip>
-                                    ) : (
-                                        <span
-                                            className = { classes.roomName }
-                                            ref = { roomNameRef }>
-                                            {_roomName}
-                                        </span>
-                                    )}
-                                </span>
-                            )}
+                            <span className = { classes.roomNameContainer }>
+                                Please enter your name below and join the meeting
+                            </span>
                             {children}
                         </div>
                         {_buttons.length && <Toolbox toolbarButtons = { _buttons } />}

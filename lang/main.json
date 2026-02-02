@@ -1305,6 +1305,7 @@
         "Settings": "Settings",
         "accessibilityLabel": {
             "Settings": "Open settings",
+            "alwaysVisible": "Toggle toolbar always visible",
             "audioOnly": "Toggle audio only",
             "audioRoute": "Select the sound device",
             "boo": "Boo",
@@ -1396,6 +1397,7 @@
             "videounmute": "Start camera"
         },
         "addPeople": "Add people to your call",
+        "alwaysVisible": "Pin toolbar (disable auto-hide)",
         "advancedAudioSettings": {
             "aec": {
                 "label": "Acoustic echo cancellation"

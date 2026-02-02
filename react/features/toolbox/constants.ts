@@ -180,6 +180,7 @@ export const TOOLBAR_BUTTONS: ToolbarButton[] = [
     'stats',
     'tileview',
     'toggle-camera',
+    'toolbox-always-visible',
     'videoquality',
     'whiteboard'
 ];

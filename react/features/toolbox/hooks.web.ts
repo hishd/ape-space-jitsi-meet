@@ -71,6 +71,7 @@ import LinkToSalesforceButton from './components/web/LinkToSalesforceButton';
 import ProfileButton from './components/web/ProfileButton';
 import ShareDesktopButton from './components/web/ShareDesktopButton';
 import ToggleCameraButton from './components/web/ToggleCameraButton';
+import ToolboxAlwaysVisibleToggle from './components/web/ToolboxAlwaysVisibleToggle';
 import VideoSettingsButton from './components/web/VideoSettingsButton';
 import { isButtonEnabled, isDesktopShareButtonDisabled } from './functions.web';
 import { ICustomToolbarButton, IToolboxButton, ToolbarButton } from './types';
@@ -154,6 +155,12 @@ const noiseSuppression = {
 const settings = {
     key: 'settings',
     Content: SettingsButton,
+    group: 4
+};
+
+const toolboxAlwaysVisible = {
+    key: 'toolbox-always-visible',
+    Content: ToolboxAlwaysVisibleToggle,
     group: 4
 };
 
@@ -322,6 +329,7 @@ export function useToolboxButtons(
         'select-background': virtualBackground,
         stats: speakerStats,
         settings,
+        'toolbox-always-visible': toolboxAlwaysVisible,
         shortcuts,
         embedmeeting: embed,
         feedback,

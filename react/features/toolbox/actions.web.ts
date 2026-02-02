@@ -278,3 +278,40 @@ export function closeOverflowMenuIfOpen() {
         overflowMenuVisible && dispatch(setOverflowMenuVisible(false));
     };
 }
+
+/**
+ * Toggles the toolbox always visible mode (disables/enables auto-hide).
+ *
+ * @returns {Function}
+ */
+export function toggleToolboxAlwaysVisible() {
+    return (dispatch: IStore['dispatch'], getState: IStore['getState']) => {
+        const state = getState();
+        const { toolbarConfig } = state['features/base/config'];
+        const currentAlwaysVisible = toolbarConfig?.alwaysVisible;
+
+        // Toggle the alwaysVisible setting
+        dispatch(overwriteConfig({
+            toolbarConfig: {
+                ...toolbarConfig,
+                alwaysVisible: !currentAlwaysVisible
+            }
+        }));
+
+        // If we're enabling always visible, clear any pending timeout and show the toolbox
+        if (!currentAlwaysVisible) {
+            dispatch(clearToolboxTimeout());
+            dispatch(setToolboxVisible(true));
+        } else {
+            // If disabling always visible, start the auto-hide timer
+            const toolbarTimeout = getToolbarTimeout(state);
+
+            dispatch(
+                setToolboxTimeout(
+                    () => dispatch(hideToolbox()),
+                    toolbarTimeout
+                )
+            );
+        }
+    };
+}

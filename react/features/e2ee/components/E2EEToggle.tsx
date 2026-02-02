@@ -5,6 +5,7 @@ import { makeStyles } from "tss-react/mui";
 import { createE2EEEvent } from "../../analytics/AnalyticsEvents";
 import { sendAnalytics } from "../../analytics/functions";
 import { IReduxState } from "../../app/types";
+import { isAnyDialogOpen } from "../../base/dialog/functions";
 import Switch from "../../base/ui/components/web/Switch";
 import { toggleE2EE } from "../actions";
 import { MAX_MODE } from "../constants";
@@ -83,6 +84,7 @@ const E2EEToggle = () => {
     const e2eeEnabled = useSelector((state: IReduxState) => state["features/e2ee"].enabled);
     const maxMode = useSelector((state: IReduxState) => state["features/e2ee"].maxMode);
     const e2eeSupported = useSelector((state: IReduxState) => state["features/base/conference"].e2eeSupported);
+    const isDialogOpen = useSelector((state: IReduxState) => isAnyDialogOpen(state));
     const isModerator = useSelector((state: IReduxState) => {
         const localParticipant = state["features/base/participants"].local;
 
@@ -93,6 +95,11 @@ const E2EEToggle = () => {
 
     // Only show if E2EE is supported and user is moderator
     if (!e2eeSupported || !isModerator) {
+        return null;
+    }
+
+    // Hide when any dialog is open
+    if (isDialogOpen) {
         return null;
     }
 

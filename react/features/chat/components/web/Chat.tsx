@@ -383,6 +383,40 @@ const Chat = ({
     }, []);
 
     /**
+     * Downloads the chat history as a text file.
+     *
+     * @returns {void}
+     */
+    const downloadChatHistory = useCallback(() => {
+        if (!_messages || _messages.length === 0) {
+            return;
+        }
+
+        // Format messages as text
+        const chatText = _messages
+            .filter(msg => !msg.isReaction && msg.message) // Filter out reactions and empty messages
+            .map(msg => {
+                const date = new Date(msg.timestamp);
+                const timeString = date.toLocaleString();
+                const messageType = msg.privateMessage ? '[Private]' : '';
+                return `[${timeString}] ${messageType} ${msg.displayName}: ${msg.message}`;
+            })
+            .join('\n');
+
+        // Create blob and download
+        const blob = new Blob([chatText], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+        link.href = url;
+        link.download = `apespace-chat-${timestamp}.txt`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }, [ _messages ]);
+
+    /**
      * Click handler for the chat sidenav.
      *
      * @param {KeyboardEvent} event - Esc key click to close the popup.
@@ -586,7 +620,9 @@ const Chat = ({
                 className = { cx('chat-header', classes.chatHeader) }
                 isCCTabEnabled = { _isCCTabEnabled }
                 isPollsEnabled = { _isPollsEnabled }
-                onCancel = { onToggleChat } />
+                messages = { _messages }
+                onCancel = { onToggleChat }
+                onDownload = { downloadChatHistory } />
             {_showNamePrompt
                 ? <DisplayNameForm
                     isCCTabEnabled = { _isCCTabEnabled }

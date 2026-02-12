@@ -39,7 +39,10 @@ const useStyles = makeStyles()(theme => {
             zIndex: 3,
             display: 'inline-block',
             borderRadius: '4px',
-            boxSizing: 'border-box'
+            boxSizing: 'border-box',
+            '& svg': {
+                fill: theme.palette.icon04
+            }
         }
     };
 });

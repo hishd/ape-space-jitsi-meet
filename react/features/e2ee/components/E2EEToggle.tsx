@@ -17,7 +17,7 @@ const useStyles = makeStyles()((theme) => ({
         position: "absolute",
         top: 16,
         left: 16,
-        zIndex: 1000,
+        zIndex: 3,
         display: "flex",
         alignItems: "center",
         gap: 14,

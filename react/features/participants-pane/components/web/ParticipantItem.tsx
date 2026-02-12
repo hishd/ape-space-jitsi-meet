@@ -84,6 +84,11 @@ interface IProps extends WithTranslation {
     raisedHand?: boolean;
 
     /**
+     * The order of the participant in the raised hands queue.
+     */
+    raisedHandOrder?: number;
+
+    /**
      * Media state for video.
      */
     videoMediaState?: MediaState;
@@ -139,6 +144,7 @@ function ParticipantItem({
     overflowDrawer,
     participantID,
     raisedHand,
+    raisedHandOrder,
     t,
     videoMediaState = MEDIA_STATE.NONE,
     youText
@@ -175,7 +181,7 @@ function ParticipantItem({
 
     const indicators = (
         <>
-            {raisedHand && <RaisedHandIndicator />}
+            {raisedHand && <RaisedHandIndicator order = { raisedHandOrder } />}
             {VideoStateIcons[videoMediaState]}
             {AudioStateIcons[audioMediaState]}
         </>

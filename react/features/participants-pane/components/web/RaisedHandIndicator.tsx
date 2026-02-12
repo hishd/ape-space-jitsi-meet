@@ -42,10 +42,16 @@ const useStyles = makeStyles()(theme => {
             gap: '4px'
         },
         indicator: {
-            backgroundColor: theme.palette.warning02,
             borderRadius: `${Number(theme.shape.borderRadius) / 2}px`,
             height: '24px',
-            width: '24px'
+            width: '24px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            
+            '& svg path': {
+                fill: theme.palette.icon04
+            }
         },
         orderBadge: {
             backgroundColor: theme.palette.warning02,
@@ -65,13 +71,12 @@ const useStyles = makeStyles()(theme => {
 });
 
 export const RaisedHandIndicator = ({ order }: IProps) => {
-    const { classes: styles, theme } = useStyles();
+    const { classes: styles } = useStyles();
 
     return (
         <div className = { styles.container }>
             <div className = { styles.indicator }>
                 <Icon
-                    color = { theme.palette.icon04 }
                     size = { 16 }
                     src = { IconRaiseHand } />
             </div>

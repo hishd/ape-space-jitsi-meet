@@ -8,6 +8,7 @@ import {
     getLocalParticipant,
     getParticipantByIdOrUndefined,
     getParticipantDisplayName,
+    getRaisedHandOrder,
     hasRaisedHand,
     isParticipantModerator
 } from '../../../base/participants/functions';
@@ -102,6 +103,11 @@ interface IProps {
     _raisedHand: boolean;
 
     /**
+     * The order of the participant in the raised hands queue.
+     */
+    _raisedHandOrder: number;
+
+    /**
      * Media state for video.
      */
     _videoMediaState: MediaState;
@@ -180,6 +186,7 @@ function MeetingParticipantItem({
     _participantID,
     _quickActionButtonType,
     _raisedHand,
+    _raisedHandOrder,
     _videoMediaState,
     isHighlighted,
     isInBreakoutRoom,
@@ -246,6 +253,7 @@ function MeetingParticipantItem({
             overflowDrawer = { overflowDrawer }
             participantID = { _participantID }
             raisedHand = { _raisedHand }
+            raisedHandOrder = { _raisedHandOrder }
             youText = { youText }>
 
             {!overflowDrawer && !_participant?.fakeParticipant
@@ -298,6 +306,8 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
         ? getLocalAudioTrack(tracks) : getTrackByMediaTypeAndParticipant(tracks, MEDIA_TYPE.AUDIO, participantID);
 
     const { disableModeratorIndicator } = state['features/base/config'];
+    const _raisedHand = hasRaisedHand(participant);
+    const _raisedHandOrder = _raisedHand ? getRaisedHandOrder(state, participantID) : 0;
 
     return {
         _audioMediaState,
@@ -310,7 +320,8 @@ function _mapStateToProps(state: IReduxState, ownProps: any) {
         _participant: participant,
         _participantID: participant?.id ?? '',
         _quickActionButtonType,
-        _raisedHand: hasRaisedHand(participant),
+        _raisedHand,
+        _raisedHandOrder,
         _videoMediaState
     };
 }

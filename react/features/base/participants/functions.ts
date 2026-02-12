@@ -798,6 +798,22 @@ export function hasRaisedHand(participant?: IParticipant): boolean {
 }
 
 /**
+ * Returns the order/position of a participant in the raised hands queue.
+ * Returns 0 if the participant has not raised their hand.
+ *
+ * @param {Object|Function} stateful - Object or function that can be resolved
+ * to the Redux state.
+ * @param {string} participantId - The ID of the participant.
+ * @returns {number} - The position in the queue (1-indexed), or 0 if not in queue.
+ */
+export function getRaisedHandOrder(stateful: IStateful, participantId: string): number {
+    const raisedHandsQueue = getRaiseHandsQueue(stateful);
+    const index = raisedHandsQueue.findIndex(item => item.id === participantId);
+    
+    return index === -1 ? 0 : index + 1;
+}
+
+/**
  * Add people feature enabling/disabling.
  *
  * @param {Object|Function} stateful - Object or function that can be resolved

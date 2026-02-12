@@ -37,6 +37,9 @@ const useStyles = makeStyles()(theme => {
  * @returns {ReactElement}
  */
 const SubjectText = () => {
+
+    return (<></>)
+    
     const subject = useSelector(getConferenceName);
     const { classes } = useStyles();
 

@@ -119,7 +119,7 @@ const PollsPane = ({ createMode, isCreatePollsDisabled, onCreate, setCreateMode,
         });
 
         // Create blob and download
-        const blob = new Blob([exportText], { type: 'text/plain;charset=utf-8' });
+        const blob = new Blob([exportText], { type: 'text/plain;charset=utf-8' } as any);
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         const downloadTimestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);

@@ -3,12 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Icon from '../../../base/icons/components/Icon';
-import { IconCloseLarge, IconDownload } from '../../../base/icons/svg';
+import { IconCloseLarge } from '../../../base/icons/svg';
 import { isFileSharingEnabled } from '../../../file-sharing/functions.any';
 import { toggleChat } from '../../actions.web';
 import { ChatTabs } from '../../constants';
 import { getFocusedTab, isChatDisabled } from '../../functions';
-import { IMessage } from '../../types';
 
 interface IProps {
 
@@ -28,19 +27,9 @@ interface IProps {
     isPollsEnabled: boolean;
 
     /**
-     * All chat messages.
-     */
-    messages?: IMessage[];
-
-    /**
      * Function to be called when pressing the close button.
      */
     onCancel: Function;
-
-    /**
-     * Function to be called when downloading chat history.
-     */
-    onDownload?: Function;
 }
 
 /**
@@ -48,7 +37,7 @@ interface IProps {
  *
  * @returns {React$Element<any>}
  */
-function ChatHeader({ className, isCCTabEnabled, isPollsEnabled, messages, onDownload }: IProps) {
+function ChatHeader({ className, isCCTabEnabled, isPollsEnabled }: IProps) {
     const dispatch = useDispatch();
     const { t } = useTranslation();
     const _isChatDisabled = useSelector(isChatDisabled);
@@ -65,19 +54,6 @@ function ChatHeader({ className, isCCTabEnabled, isPollsEnabled, messages, onDow
             onCancel();
         }
     }, []);
-
-    const onDownloadKeyPress = useCallback(e => {
-        if (onDownload && (e.key === ' ' || e.key === 'Enter')) {
-            e.preventDefault();
-            onDownload();
-        }
-    }, [ onDownload ]);
-
-    const handleDownload = useCallback(() => {
-        if (onDownload) {
-            onDownload();
-        }
-    }, [ onDownload ]);
 
     let title = 'chat.title';
 
@@ -104,24 +80,13 @@ function ChatHeader({ className, isCCTabEnabled, isPollsEnabled, messages, onDow
                 role = 'heading'>
                 { t(title) }
             </span>
-            <div style = {{ display: 'flex', gap: '12px', alignItems: 'center' }}>
-                {focusedTab === ChatTabs.CHAT && messages && messages.length > 0 && (
-                    <Icon
-                        ariaLabel = { t('chat.download') }
-                        onClick = { handleDownload }
-                        onKeyPress = { onDownloadKeyPress }
-                        role = 'button'
-                        src = { IconDownload }
-                        tabIndex = { 0 } />
-                )}
-                <Icon
-                    ariaLabel = { t('toolbar.closeChat') }
-                    onClick = { onCancel }
-                    onKeyPress = { onKeyPressHandler }
-                    role = 'button'
-                    src = { IconCloseLarge }
-                    tabIndex = { 0 } />
-            </div>
+            <Icon
+                ariaLabel = { t('toolbar.closeChat') }
+                onClick = { onCancel }
+                onKeyPress = { onKeyPressHandler }
+                role = 'button'
+                src = { IconCloseLarge }
+                tabIndex = { 0 } />
         </div>
     );
 }

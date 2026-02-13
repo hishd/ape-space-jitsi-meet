@@ -5,8 +5,7 @@ import { makeStyles } from 'tss-react/mui';
 
 import { IReduxState } from '../../../app/types';
 import { translate } from '../../../base/i18n/functions';
-import { IconInfo, IconMessage, IconShareDoc, IconSubtitles } from '../../../base/icons/svg';
-import { getLocalParticipant, getRemoteParticipants, isPrivateChatEnabledSelf } from '../../../base/participants/functions';
+import { IconInfo, IconMessage, IconShareDoc, IconSubtitles, IconDownload } from '../../../base/icons/svg';import Icon from '../../../base/icons/components/Icon';import { getLocalParticipant, getRemoteParticipants, isPrivateChatEnabledSelf } from '../../../base/participants/functions';
 import Select from '../../../base/ui/components/web/Select';
 import Tabs from '../../../base/ui/components/web/Tabs';
 import { arePollsDisabled } from '../../../conference/functions.any';
@@ -165,8 +164,35 @@ const useStyles = makeStyles<{ _isResizing: boolean; width: number; }>()((theme,
         },
 
         chatPanelNoTabs: {
+            display: 'flex',
+            flexDirection: 'column',
+
             // extract header height
             height: 'calc(100% - 60px)'
+        },
+
+        chatMessagesHeader: {
+            height: '60px',
+            flexShrink: 0,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: `${theme.spacing(3)} ${theme.spacing(4)}`,
+            boxSizing: 'border-box',
+            color: theme.palette.text01,
+            ...theme.typography.heading6,
+            borderBottom: `1px solid ${theme.palette.ui03}`,
+
+            '.jitsi-icon': {
+                cursor: 'pointer'
+            }
+        },
+
+        messageContainerWrapper: {
+            flex: 1,
+            overflow: 'hidden',
+            display: 'flex',
+            flexDirection: 'column'
         },
 
         pollsPanel: {
@@ -255,7 +281,7 @@ const Chat = ({
         state['features/chat'].notifyPrivateRecipientsChangedTimestamp
     );
     const {
-        defaultRemoteDisplayName = 'Fellow Jitster'
+        defaultRemoteDisplayName = 'Fellow Ape'
     } = useSelector((state: IReduxState) => state['features/base/config']);
     const privateMessageRecipient = useSelector((state: IReduxState) => state['features/chat'].privateMessageRecipient);
     const participants = useSelector(getRemoteParticipants);
@@ -383,6 +409,53 @@ const Chat = ({
     }, []);
 
     /**
+     * Downloads the chat history as a text file.
+     *
+     * @returns {void}
+     */
+    const downloadChatHistory = useCallback(() => {
+        if (!_messages || _messages.length === 0) {
+            return;
+        }
+
+        // Format messages as text
+        const chatText = _messages
+            .filter(msg => !msg.isReaction && msg.message) // Filter out reactions and empty messages
+            .map(msg => {
+                const date = new Date(msg.timestamp);
+                const timeString = date.toLocaleString();
+                const messageType = msg.privateMessage ? '[Private]' : '';
+                return `[${timeString}] ${messageType} ${msg.displayName}: ${msg.message}`;
+            })
+            .join('\n');
+
+        // Create blob and download
+        const blob = new Blob([chatText], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+        link.href = url;
+        link.download = `apespace-chat-${timestamp}.txt`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    }, [ _messages ]);
+
+    /**
+     * Handles keyboard press on download button.
+     *
+     * @param {React.KeyboardEvent} e - The keyboard event.
+     * @returns {void}
+     */
+    const onDownloadKeyPress = useCallback((e: React.KeyboardEvent) => {
+        if (e.key === ' ' || e.key === 'Enter') {
+            e.preventDefault();
+            downloadChatHistory();
+        }
+    }, [ downloadChatHistory ]);
+
+    /**
      * Click handler for the chat sidenav.
      *
      * @param {KeyboardEvent} event - Esc key click to close the popup.
@@ -425,24 +498,37 @@ const Chat = ({
      * @returns {ReactElement}
      */
     function renderChat() {
+        const hasMessages = _messages && _messages.length > 0;
+        const hasTabs = _isPollsEnabled || _isCCTabEnabled || _isFileSharingTabEnabled;
+
         return (
             <>
                 {renderTabs()}
                 {!_isChatDisabled && (<div
                     aria-labelledby = { ChatTabs.CHAT }
                     className = { cx(
-                        classes.chatPanel,
-                        !_isPollsEnabled
-                        && !_isCCTabEnabled
-                        && !_isFileSharingTabEnabled
-                        && classes.chatPanelNoTabs,
+                        hasTabs ? classes.chatPanel : classes.chatPanelNoTabs,
                         _focusedTab !== ChatTabs.CHAT && 'hide'
                     ) }
                     id = { `${ChatTabs.CHAT}-panel` }
                     role = 'tabpanel'
                     tabIndex = { 0 }>
-                    <MessageContainer
-                        messages = { _messages } />
+                    {hasMessages && (
+                        <div className = { classes.chatMessagesHeader }>
+                            <span>{ "Export Chat" }</span>
+                            <Icon
+                                ariaLabel = { t('chat.download') }
+                                onClick = { downloadChatHistory }
+                                onKeyPress = { onDownloadKeyPress }
+                                role = 'button'
+                                src = { IconDownload }
+                                tabIndex = { 0 } />
+                        </div>
+                    )}
+                    <div className = { classes.messageContainerWrapper }>
+                        <MessageContainer
+                            messages = { _messages } />
+                    </div>
                     <MessageRecipient />
                     {isPrivateChatAllowed && (
                         <Select

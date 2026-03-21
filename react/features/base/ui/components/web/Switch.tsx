@@ -52,6 +52,7 @@ const useStyles = makeStyles()((theme) => ({
         transition: "transform 0.25s ease",
         transform: "translateX(0)",
         boxShadow: "0 2px 4px rgba(0,0,0,0.25)",
+        pointerEvents: "none",
 
         "&.is-mobile": {
             width: "26px",
@@ -70,6 +71,12 @@ const useStyles = makeStyles()((theme) => ({
     checkbox: {
         position: "absolute",
         inset: 0,
+        width: "100%",
+        height: "100%",
+        margin: 0,
+        zIndex: 1,
+        appearance: "none",
+        WebkitAppearance: "none",
         opacity: 0,
         cursor: "pointer",
     },
@@ -81,7 +88,7 @@ const Switch = ({ className, id, checked, disabled, onChange }: IProps) => {
 
     const change = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
         onChange(e.target.checked);
-    }, []);
+    }, [onChange]);
 
     return (
         <span
